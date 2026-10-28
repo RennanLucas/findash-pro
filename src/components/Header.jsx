@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { 
-  TrendingUp, 
   PlusCircle, 
   Printer, 
   Database, 
@@ -12,6 +11,7 @@ import {
 } from 'lucide-react';
 import { ACCOUNT_INFO } from '../data/initialData';
 import { exportToCSV } from '../utils/formatters';
+import { BrandLogo } from './BrandLogo';
 
 export function Header({ 
   transactions, 
@@ -42,9 +42,7 @@ export function Header({
           
           {/* Logo & Brand */}
           <div className="flex items-center space-x-3.5">
-            <div className="w-11 h-11 rounded-xl bg-gradient-to-tr from-emerald-600 via-teal-500 to-cyan-500 flex items-center justify-center shadow-lg shadow-emerald-500/20 text-white">
-              <TrendingUp className="w-6 h-6 stroke-[2.5]" />
-            </div>
+            <BrandLogo size={42} />
             <div>
               <div className="flex items-center space-x-2">
                 <span className="text-xl font-black tracking-tight text-slate-900 dark:text-white">
