@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
+  <!-- Rounded Squircle Base (Matte Obsidian) -->
+  <rect width="512" height="512" rx="128" fill="#090a0f"/>
+  <rect x="8" y="8" width="496" height="496" rx="120" stroke="#232738" stroke-width="12"/>
+
+  <!-- Geometric Architectural Emblem: FinDash Minimalist "F" & Upward Momentum -->
+  <!-- Left Pillar -->
+  <rect x="128" y="120" width="56" height="272" rx="28" fill="#FFFFFF"/>
+  
+  <!-- Top Horizontal Wing -->
+  <path d="M168 120H336C358.091 120 376 137.909 376 160C376 182.091 358.091 200 336 200H168V120Z" fill="#FFFFFF"/>
+  
+  <!-- Middle Dynamic Emerald Wing -->
+  <path d="M168 232H288C305.673 232 320 246.327 320 264C320 281.673 305.673 296 288 296H168V232Z" fill="#10B981"/>
+
+  <!-- Profit Apex Dot -->
+  <circle cx="384" cy="120" r="24" fill="#10B981"/>
+</svg>
