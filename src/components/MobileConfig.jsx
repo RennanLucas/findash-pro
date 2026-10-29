@@ -146,7 +146,25 @@ export function MobileConfig({
           <span className="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-md">Abrir</span>
         </button>
 
-        {/* Download Official Logo */}
+        {/* Download Official Logo PNG */}
+        <a
+          href="./pwa-512x512.png"
+          download="FinDash-Logo.png"
+          className="w-full p-4 flex items-center justify-between text-left hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors"
+        >
+          <div className="flex items-center space-x-3">
+            <div className="w-8 h-8 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 flex items-center justify-center">
+              <Image className="w-4 h-4" />
+            </div>
+            <div>
+              <p className="font-bold text-slate-900 dark:text-white">Baixar Logo Oficial (PNG Imagem)</p>
+              <p className="text-[11px] text-slate-400">Formato quadrado 512x512 para fotos e ícones</p>
+            </div>
+          </div>
+          <Download className="w-4 h-4 text-slate-400" />
+        </a>
+
+        {/* Download Official Logo SVG */}
         <a
           href="./logo.svg"
           download="FinDash-Logo.svg"
@@ -157,8 +175,8 @@ export function MobileConfig({
               <Image className="w-4 h-4" />
             </div>
             <div>
-              <p className="font-bold text-slate-900 dark:text-white">Baixar Logo Oficial (SVG)</p>
-              <p className="text-[11px] text-slate-400">Emblema em vetor de alta resolução</p>
+              <p className="font-bold text-slate-900 dark:text-white">Baixar Logo Vetor (SVG)</p>
+              <p className="text-[11px] text-slate-400">Emblema em vetor nítido em qualquer tamanho</p>
             </div>
           </div>
           <Download className="w-4 h-4 text-slate-400" />
