@@ -263,10 +263,15 @@ export default function App() {
   };
 
   const handleResetData = () => {
-    setTransactions(INITIAL_TRANSACTIONS);
-    setTarget(ACCOUNT_INFO.monthlyTarget);
-    setCurrentPeriod(getCurrentMonthKey());
-    showToast('Dados restaurados para o PDF FinDash!');
+    const confirmed = typeof window !== 'undefined' && window.confirm 
+      ? window.confirm('Deseja restaurar a base original de 44 lançamentos do PDF? Quaisquer alterações não salvas em backup serão substituídas.') 
+      : true;
+    if (confirmed) {
+      setTransactions(INITIAL_TRANSACTIONS);
+      setTarget(ACCOUNT_INFO.monthlyTarget);
+      setCurrentPeriod(getCurrentMonthKey());
+      showToast('Dados restaurados para o PDF FinDash!');
+    }
   };
 
   const handleRestoreBackup = (newTxList, newTarget) => {

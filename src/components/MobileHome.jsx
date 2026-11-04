@@ -8,6 +8,11 @@ import {
   Smartphone, 
   Laptop, 
   Gamepad2,
+  Speaker,
+  Watch,
+  Headphones,
+  ShoppingBag,
+  Briefcase,
   Package
 } from 'lucide-react';
 import { formatBRL, formatPercent, getMonthName, getCurrentMonthKey, getMonthShortName } from '../utils/formatters';
@@ -51,11 +56,19 @@ export function MobileHome({
       .sort((a, b) => b[1] - a[1])
       .slice(0, 3);
 
+    const nichoIcons = {
+      Celulares: Smartphone,
+      Notebooks: Laptop,
+      Videogames: Gamepad2,
+      Eletrodomésticos: Speaker,
+      Smartwatches: Watch,
+      Acessórios: Headphones,
+      Vendas: ShoppingBag,
+      Freelance: Briefcase
+    };
+
     return sorted.map(([name, profit]) => {
-      let icon = Package;
-      if (name === 'Celulares') icon = Smartphone;
-      else if (name === 'Notebooks') icon = Laptop;
-      else if (name === 'Videogames') icon = Gamepad2;
+      const icon = nichoIcons[name] || Package;
       return { name, profit, icon };
     });
   }, [transactions]);
@@ -138,8 +151,14 @@ export function MobileHome({
             <span className="text-[11px] text-slate-400 block">
               Lucro Líquido ({periodLabel})
             </span>
-            <span className="text-lg font-bold text-emerald-500">
-              +{formatBRL(displayProfit)}
+            <span className={`text-lg font-bold ${
+              displayProfit > 0 
+                ? 'text-emerald-500' 
+                : displayProfit < 0 
+                  ? 'text-rose-500' 
+                  : 'text-slate-400 dark:text-slate-500'
+            }`}>
+              {displayProfit > 0 ? `+${formatBRL(displayProfit)}` : formatBRL(displayProfit)}
             </span>
           </div>
 

@@ -11,6 +11,16 @@ import {
   HeartPulse, 
   GraduationCap, 
   TrendingUp,
+  Watch,
+  Headphones,
+  Utensils,
+  Car,
+  Shirt,
+  Scissors,
+  Bot,
+  Home,
+  Truck,
+  CreditCard,
   ChevronRight
 } from 'lucide-react';
 import { formatBRL, formatDateBR } from '../utils/formatters';
@@ -20,13 +30,23 @@ const CATEGORY_ICONS = {
   Notebooks: Laptop,
   Videogames: Gamepad2,
   Eletrodomésticos: Speaker,
+  Smartwatches: Watch,
+  Acessórios: Headphones,
   Vendas: ShoppingBag,
   Freelance: Briefcase,
-  Outros: Layers,
   Lazer: Smile,
   Saúde: HeartPulse,
+  Vestuário: Shirt,
+  'Cuidados Pessoais': Scissors,
+  Alimentação: Utensils,
+  Transporte: Car,
+  'Assinaturas & IA': Bot,
   Educação: GraduationCap,
-  Investimentos: TrendingUp
+  Investimentos: TrendingUp,
+  'Contas & Moradia': Home,
+  'Frete & Envio': Truck,
+  'Taxas & Bancos': CreditCard,
+  Outros: Layers
 };
 
 export function MobileTransactionCard({ tx, onClick }) {

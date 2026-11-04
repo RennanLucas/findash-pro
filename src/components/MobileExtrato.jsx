@@ -33,12 +33,20 @@ export function MobileExtrato({
         t.paymentMethod?.toLowerCase().includes(search) ||
         t.date?.includes(search) ||
         t.amount?.toString().includes(search) ||
+        formatBRL(t.amount).toLowerCase().includes(search) ||
         (t.notes && t.notes.toLowerCase().includes(search));
 
       const matchesType = typeFilter === 'ALL' || t.type === typeFilter;
 
       return matchesSearch && matchesType;
-    }).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+    }).sort((a, b) => {
+      const timeDiff = new Date(b.date).getTime() - new Date(a.date).getTime();
+      if (timeDiff !== 0) return timeDiff;
+      if (b.createdAt && a.createdAt) {
+        return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+      }
+      return 0;
+    });
   }, [monthTransactions, searchTerm, typeFilter]);
 
   // Totals of filtered list

@@ -1,14 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { X, Check, Trash2, AlertCircle } from 'lucide-react';
-import { formatBRL, formatPercent } from '../utils/formatters';
+import { formatBRL, formatPercent, getTodayDateLocal } from '../utils/formatters';
 
-const getTodayDate = () => new Date().toISOString().split('T')[0];
+const generateSafeId = () => {
+  if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
+    return crypto.randomUUID();
+  }
+  return 'tx_' + Date.now() + '_' + Math.random().toString(36).substring(2, 11);
+};
 
 export function MobileTransactionSheet({ isOpen, onClose, onSave, onDelete, editingTransaction, initialType = 'Receita' }) {
   const [type, setType] = useState(initialType);
   const [category, setCategory] = useState('Celulares');
   const [description, setDescription] = useState('');
-  const [date, setDate] = useState(getTodayDate);
+  const [date, setDate] = useState(getTodayDateLocal);
   const [paymentMethod, setPaymentMethod] = useState('Pix');
   const [amount, setAmount] = useState('');
   const [cost, setCost] = useState('');
@@ -22,7 +27,7 @@ export function MobileTransactionSheet({ isOpen, onClose, onSave, onDelete, edit
       setType(editingTransaction.type || 'Receita');
       setCategory(editingTransaction.category || 'Celulares');
       setDescription(editingTransaction.description || '');
-      setDate(editingTransaction.date ? editingTransaction.date.split('T')[0] : getTodayDate());
+      setDate(editingTransaction.date ? editingTransaction.date.split('T')[0] : getTodayDateLocal());
       setPaymentMethod(editingTransaction.paymentMethod || 'Pix');
       setAmount(editingTransaction.amount ? editingTransaction.amount.toString() : '');
       setCost(editingTransaction.cost !== undefined && editingTransaction.cost !== null ? editingTransaction.cost.toString() : '');
@@ -33,7 +38,7 @@ export function MobileTransactionSheet({ isOpen, onClose, onSave, onDelete, edit
       setType(initialType);
       setCategory(initialType === 'Receita' ? 'Celulares' : 'Lazer');
       setDescription('');
-      setDate(getTodayDate());
+      setDate(getTodayDateLocal());
       setPaymentMethod('Pix');
       setAmount('');
       setCost('');
@@ -96,7 +101,7 @@ export function MobileTransactionSheet({ isOpen, onClose, onSave, onDelete, edit
     }
 
     const payload = {
-      id: editingTransaction ? editingTransaction.id : crypto.randomUUID(),
+      id: editingTransaction ? editingTransaction.id : generateSafeId(),
       date,
       type,
       category: finalCategory,

@@ -34,6 +34,20 @@ export const getCurrentMonthKey = () => {
   return `${year}-${month}`;
 };
 
+export const getTodayDateLocal = () => {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, '0');
+  const day = String(now.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+};
+
+export const formatProfitBRL = (value) => {
+  if (value === undefined || value === null || isNaN(value)) return 'R$ 0,00';
+  if (value > 0) return `+${formatBRL(value)}`;
+  return formatBRL(value);
+};
+
 export const getMonthShortName = (monthKey) => {
   if (!monthKey || monthKey === 'ALL') return 'Geral';
   const parts = monthKey.split('-');

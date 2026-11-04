@@ -113,9 +113,9 @@ export function MobileResumo({ monthlyData, categoriesData, darkMode }) {
             </div>
           </div>
 
-          {/* Clean Cards for each month */}
+          {/* Clean Cards for each month (Newest first) */}
           <div className="space-y-2">
-            {sortedMonths.map(m => {
+            {[...sortedMonths].reverse().map(m => {
               const row = monthlyData[m];
               const isCurrent = m === getCurrentMonthKey();
               return (
@@ -129,8 +129,14 @@ export function MobileResumo({ monthlyData, categoriesData, darkMode }) {
                         </span>
                       )}
                     </span>
-                    <span className="font-bold text-emerald-500">
-                      +{formatBRL(row.lucroLiquido)}
+                    <span className={`font-bold ${
+                      row.lucroLiquido > 0 
+                        ? 'text-emerald-500' 
+                        : row.lucroLiquido < 0 
+                          ? 'text-rose-500' 
+                          : 'text-slate-400 dark:text-slate-500'
+                    }`}>
+                      {row.lucroLiquido > 0 ? `+${formatBRL(row.lucroLiquido)}` : formatBRL(row.lucroLiquido)}
                     </span>
                   </div>
 
