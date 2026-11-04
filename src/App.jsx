@@ -5,7 +5,9 @@ import {
 } from './data/initialData';
 import { 
   calculateMetrics, 
-  getMonthName 
+  getMonthName,
+  getCurrentMonthKey,
+  getMonthShortName
 } from './utils/formatters';
 import { MobileHome } from './components/MobileHome';
 import { MobileExtrato } from './components/MobileExtrato';
@@ -52,8 +54,8 @@ export default function App() {
     return INITIAL_TRANSACTIONS;
   });
 
-  // Period filter - Defaults to current month (Outubro/2026)
-  const [currentPeriod, setCurrentPeriod] = useState('2026-10');
+  // Period filter - Defaults to dynamic current month (e.g. 2026-11)
+  const [currentPeriod, setCurrentPeriod] = useState(() => getCurrentMonthKey());
 
   // Navigation tab for mobile ('dashboard' | 'transactions' | 'categories' | 'monthly')
   const [activeTab, setActiveTab] = useState('dashboard');
@@ -112,9 +114,15 @@ export default function App() {
     setTimeout(() => setToastMessage(''), 3000);
   };
 
-  // Available months
+  // Available months (always includes current month, sorted newest first)
   const availableMonths = useMemo(() => {
     const map = new Map();
+    const curMonth = getCurrentMonthKey();
+    map.set(curMonth, {
+      key: curMonth,
+      label: getMonthName(curMonth)
+    });
+
     transactions.forEach(t => {
       const monthKey = t.date?.slice(0, 7);
       if (monthKey && !map.has(monthKey)) {
@@ -124,12 +132,24 @@ export default function App() {
         });
       }
     });
-    return Array.from(map.values()).sort((a, b) => a.key.localeCompare(b.key));
+    return Array.from(map.values()).sort((a, b) => b.key.localeCompare(a.key));
   }, [transactions]);
 
   // Monthly Data
   const monthlyData = useMemo(() => {
     const result = {};
+    const curMonth = getCurrentMonthKey();
+    result[curMonth] = {
+      receitas: 0,
+      custos: 0,
+      despesas: 0,
+      lucroBruto: 0,
+      lucroLiquido: 0,
+      saldo: 0,
+      vendas: 0,
+      movimentacoes: 0
+    };
+
     transactions.forEach(tx => {
       const monthKey = tx.date ? tx.date.slice(0, 7) : 'Outros';
       if (!result[monthKey]) {
@@ -224,10 +244,6 @@ export default function App() {
     return calculateMetrics(transactions);
   }, [transactions]);
 
-  const octoberProfit = useMemo(() => {
-    return monthlyData['2026-10'] ? monthlyData['2026-10'].lucroLiquido : 2311.00;
-  }, [monthlyData]);
-
   // Handlers
   const handleSaveTransaction = (savedTx) => {
     setTransactions(prev => {
@@ -249,7 +265,7 @@ export default function App() {
   const handleResetData = () => {
     setTransactions(INITIAL_TRANSACTIONS);
     setTarget(ACCOUNT_INFO.monthlyTarget);
-    setCurrentPeriod('2026-10');
+    setCurrentPeriod(getCurrentMonthKey());
     showToast('Dados restaurados para o PDF FinDash!');
   };
 
@@ -339,7 +355,7 @@ export default function App() {
               onOpenNewTx={openNewTx}
               onSelectTx={openEditTx}
               onGoToExtrato={() => setActiveTab('transactions')}
-              octoberProfit={octoberProfit}
+              overallBalance={overallMetrics.saldoAcumulado}
               accumulatedProfit={overallMetrics.lucroLiquido}
             />
           )}

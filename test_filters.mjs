@@ -1,11 +1,18 @@
 import { INITIAL_TRANSACTIONS } from './src/data/initialData.js';
-import { calculateMetrics, formatBRL } from './src/utils/formatters.js';
+import { calculateMetrics, formatBRL, getCurrentMonthKey, getMonthShortName, getMonthName } from './src/utils/formatters.js';
 
 console.log("=================================================");
 console.log("   AUDITORIA RIGOROSA DE FILTROS E CÁLCULOS     ");
 console.log("=================================================");
 
 let txs = [...INITIAL_TRANSACTIONS];
+
+// 0. Teste de Detecção Dinâmica de Mês
+console.log("\n[0] TESTE DE DETECÇÃO DINÂMICA DE MÊS ATUAL");
+const currentMonthKey = getCurrentMonthKey();
+console.log(`- Mês detectado dinamicamente: ${currentMonthKey} (${getMonthShortName(currentMonthKey)})`);
+console.assert(currentMonthKey === '2026-11', `Esperado 2026-11, obteve ${currentMonthKey}`);
+console.log("✅ Detecção de mês atual validada: Novembro/2026.");
 
 // 1. Auditoria Base
 const baseMetrics = calculateMetrics(txs);
@@ -25,7 +32,8 @@ const monthsExpected = {
   '2026-07': { count: 16, vendas: 11, rec: 27550, cust: 22100, desp: 885, liq: 4565 },
   '2026-08': { count: 18, vendas: 14, rec: 24710, cust: 19790, desp: 380, liq: 4540 },
   '2026-09': { count: 2,  vendas: 1,  rec: 100,   cust: 0,     desp: 60,  liq: 40 },
-  '2026-10': { count: 8,  vendas: 6,  rec: 18080, cust: 15360, desp: 409, liq: 2311 }
+  '2026-10': { count: 8,  vendas: 6,  rec: 18080, cust: 15360, desp: 409, liq: 2311 },
+  '2026-11': { count: 0,  vendas: 0,  rec: 0,     cust: 0,     desp: 0,   liq: 0 }
 };
 
 for (const [m, exp] of Object.entries(monthsExpected)) {

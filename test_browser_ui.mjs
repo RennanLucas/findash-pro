@@ -21,9 +21,28 @@ async function runBrowserTests() {
 
   // 1. DASHBOARD: Filtro Mês Atual vs Geral
   console.log("\n[2] TESTE DOS FILTROS DA TELA INICIAL (DASHBOARD)");
+  const novBtnText = await page.evaluate(() => {
+    const btns = Array.from(document.querySelectorAll('button'));
+    const novBtn = btns.find(b => b.textContent.includes('Novembro'));
+    return novBtn ? novBtn.textContent.trim() : null;
+  });
+  console.log(`- Botão do mês atual: ${novBtnText}`);
+  console.assert(novBtnText === 'Novembro (Atual)', "Erro: Botão não mostra Novembro (Atual)");
+
+  const novSaldo = await page.$eval('h2', el => el.textContent);
+  console.log(`- Saldo Inicial (Novembro): ${novSaldo}`);
+  console.assert(novSaldo.includes('0,00'), "Erro no saldo inicial de Novembro");
+
+  // Alterna para "Outubro"
+  await page.evaluate(() => {
+    const btns = Array.from(document.querySelectorAll('button'));
+    const octBtn = btns.find(b => b.textContent.trim() === 'Outubro');
+    if (octBtn) octBtn.click();
+  });
+  await new Promise(r => setTimeout(r, 400));
   const octSaldo = await page.$eval('h2', el => el.textContent);
-  console.log(`- Saldo Inicial (Outubro): ${octSaldo}`);
-  console.assert(octSaldo.includes('17.671'), "Erro no saldo de Outubro");
+  console.log(`- Saldo após clicar em 'Outubro': ${octSaldo}`);
+  console.assert(octSaldo.includes('17.671'), "Erro ao alternar para Outubro");
 
   // Alterna para "Total"
   await page.evaluate(() => {
@@ -36,14 +55,14 @@ async function runBrowserTests() {
   console.log(`- Saldo após clicar em 'Total': ${totalSaldo}`);
   console.assert(totalSaldo.includes('68.706'), "Erro ao alternar para Total");
 
-  // Alterna de volta para "Outubro"
+  // Alterna de volta para "Novembro (Atual)"
   await page.evaluate(() => {
     const btns = Array.from(document.querySelectorAll('button'));
-    const octBtn = btns.find(b => b.textContent.trim().startsWith('Outubro'));
-    if (octBtn) octBtn.click();
+    const novBtn = btns.find(b => b.textContent.includes('Novembro'));
+    if (novBtn) novBtn.click();
   });
   await new Promise(r => setTimeout(r, 400));
-  console.log("✅ Filtro da tela inicial (Outubro vs Geral) validado com sucesso.");
+  console.log("✅ Filtro da tela inicial (Novembro Atual vs Outubro vs Total) validado com sucesso.");
 
   // 2. NAVEGAÇÃO PARA EXTRATO
   console.log("\n[3] TESTE DE FILTROS NO EXTRATO (VENDAS & GASTOS)");
@@ -57,10 +76,11 @@ async function runBrowserTests() {
   // Testa cada pílula de mês
   const months = [
     { name: 'Todos os Meses', expCount: 44 },
-    { name: 'Julho/2026', expCount: 16 },
-    { name: 'Agosto/2026', expCount: 18 },
+    { name: 'Novembro/2026', expCount: 0 },
+    { name: 'Outubro/2026', expCount: 8 },
     { name: 'Setembro/2026', expCount: 2 },
-    { name: 'Outubro/2026', expCount: 8 }
+    { name: 'Agosto/2026', expCount: 18 },
+    { name: 'Julho/2026', expCount: 16 }
   ];
 
   for (const m of months) {

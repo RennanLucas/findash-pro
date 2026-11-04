@@ -10,7 +10,7 @@ import {
   Gamepad2,
   Package
 } from 'lucide-react';
-import { formatBRL, formatPercent, getMonthName } from '../utils/formatters';
+import { formatBRL, formatPercent, getMonthName, getCurrentMonthKey, getMonthShortName } from '../utils/formatters';
 import { MobileTransactionCard } from './MobileTransactionCard';
 
 export function MobileHome({ 
@@ -22,11 +22,13 @@ export function MobileHome({
   availableMonths = [],
   onOpenNewTx, 
   onSelectTx, 
-  onGoToExtrato
+  onGoToExtrato,
+  overallBalance
 }) {
   const recentTransactions = transactions.slice(0, 5);
 
-  const isOct = currentPeriod === '2026-10';
+  const currentMonthKey = getCurrentMonthKey();
+  const isCurrentMonth = currentPeriod === currentMonthKey;
   const isAll = currentPeriod === 'ALL';
   const displayProfit = metrics.lucroLiquido;
   const percentage = target > 0 ? (displayProfit / target) * 100 : 0;
@@ -74,22 +76,45 @@ export function MobileHome({
           </span>
 
           <div className="flex items-center space-x-1 overflow-x-auto py-0.5 scrollbar-none">
+            {/* Dynamic Current Month Pill */}
             <button
-              onClick={() => setCurrentPeriod('2026-10')}
+              onClick={() => setCurrentPeriod(currentMonthKey)}
               className={`px-2.5 py-1 rounded-lg text-xs font-semibold transition-all whitespace-nowrap ${
-                isOct 
+                isCurrentMonth 
                   ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 shadow-sm' 
-                  : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400'
+                  : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'
               }`}
             >
-              Outubro (Atual)
+              {getMonthShortName(currentMonthKey)} (Atual)
             </button>
+
+            {/* Other available months from history */}
+            {availableMonths
+              .filter(m => m.key !== currentMonthKey)
+              .map(m => {
+                const isSelected = currentPeriod === m.key;
+                return (
+                  <button
+                    key={m.key}
+                    onClick={() => setCurrentPeriod(m.key)}
+                    className={`px-2.5 py-1 rounded-lg text-xs font-semibold transition-all whitespace-nowrap ${
+                      isSelected 
+                        ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 shadow-sm' 
+                        : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'
+                    }`}
+                  >
+                    {getMonthShortName(m.key)}
+                  </button>
+                );
+              })}
+
+            {/* Total */}
             <button
               onClick={() => setCurrentPeriod('ALL')}
               className={`px-2.5 py-1 rounded-lg text-xs font-semibold transition-all whitespace-nowrap ${
                 isAll 
                   ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 shadow-sm' 
-                  : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400'
+                  : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'
               }`}
             >
               Total
@@ -213,23 +238,36 @@ export function MobileHome({
           <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">
             Últimas Movimentações ({periodLabel})
           </span>
-          <button
-            onClick={onGoToExtrato}
-            className="text-xs font-semibold text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white flex items-center space-x-0.5"
-          >
-            <span>Ver todas</span>
-            <ChevronRight className="w-3.5 h-3.5" />
-          </button>
+          {recentTransactions.length > 0 && (
+            <button
+              onClick={onGoToExtrato}
+              className="text-xs font-semibold text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white flex items-center space-x-0.5"
+            >
+              <span>Ver todas</span>
+              <ChevronRight className="w-3.5 h-3.5" />
+            </button>
+          )}
         </div>
 
         <div className="space-y-2">
-          {recentTransactions.map(tx => (
-            <MobileTransactionCard
-              key={tx.id}
-              tx={tx}
-              onClick={onSelectTx}
-            />
-          ))}
+          {recentTransactions.length === 0 ? (
+            <div className="p-6 text-center bg-white dark:bg-slate-900 rounded-3xl border border-slate-200/80 dark:border-slate-800 space-y-1">
+              <p className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+                Nenhuma movimentação em {periodLabel}
+              </p>
+              <p className="text-[11px] text-slate-400">
+                Toque em "Nova Venda" para registrar o primeiro lançamento deste mês!
+              </p>
+            </div>
+          ) : (
+            recentTransactions.map(tx => (
+              <MobileTransactionCard
+                key={tx.id}
+                tx={tx}
+                onClick={onSelectTx}
+              />
+            ))
+          )}
         </div>
       </div>
 

@@ -10,7 +10,7 @@ import {
   Smartphone
 } from 'lucide-react';
 import { ACCOUNT_INFO } from '../data/initialData';
-import { exportToCSV } from '../utils/formatters';
+import { exportToCSV, getCurrentMonthKey } from '../utils/formatters';
 import { BrandLogo } from './BrandLogo';
 
 export function Header({ 
@@ -71,7 +71,7 @@ export function Header({
               Todo o Histórico
             </button>
             {availableMonths.map((m) => {
-              const isCurrentMonth = m.key === '2026-10';
+              const isCurrentMonth = m.key === getCurrentMonthKey();
               return (
                 <button
                   key={m.key}

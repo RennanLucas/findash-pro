@@ -7,7 +7,7 @@ import {
   ResponsiveContainer, 
   Tooltip
 } from 'recharts';
-import { formatBRL, formatPercent, getMonthName } from '../utils/formatters';
+import { formatBRL, formatPercent, getMonthName, getCurrentMonthKey } from '../utils/formatters';
 
 export function MobileResumo({ monthlyData, categoriesData, darkMode }) {
   const [tab, setTab] = useState('monthly'); // 'monthly' | 'vendas' | 'gastos'
@@ -117,13 +117,13 @@ export function MobileResumo({ monthlyData, categoriesData, darkMode }) {
           <div className="space-y-2">
             {sortedMonths.map(m => {
               const row = monthlyData[m];
-              const isOct = m === '2026-10';
+              const isCurrent = m === getCurrentMonthKey();
               return (
                 <div key={m} className="p-3.5 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-2xl space-y-1.5 shadow-sm">
                   <div className="flex items-center justify-between text-xs">
                     <span className="font-bold text-slate-900 dark:text-white flex items-center space-x-1.5">
                       <span>{getMonthName(m)}</span>
-                      {isOct && (
+                      {isCurrent && (
                         <span className="px-1.5 py-0.2 rounded text-[9px] font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">
                           Atual
                         </span>

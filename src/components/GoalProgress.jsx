@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Target, AlertCircle, Edit3, Sparkles, CheckCircle2, Calendar } from 'lucide-react';
-import { formatBRL, formatPercent } from '../utils/formatters';
+import { formatBRL, formatPercent, getCurrentMonthKey, getMonthName } from '../utils/formatters';
 
 export function GoalProgress({ 
   target, 
@@ -58,15 +58,15 @@ export function GoalProgress({
         {/* Quick Month Switcher within Goal Card */}
         <div className="flex items-center bg-slate-800/80 p-1 rounded-xl border border-slate-700/60 text-xs">
           <button
-            onClick={() => onSelectPeriod('2026-10')}
+            onClick={() => onSelectPeriod(getCurrentMonthKey())}
             className={`px-3 py-1.5 rounded-lg font-bold transition-all flex items-center space-x-1.5 ${
-              currentPeriod === '2026-10'
+              currentPeriod === getCurrentMonthKey()
                 ? 'bg-emerald-600 text-white shadow-md'
                 : 'text-slate-400 hover:text-white'
             }`}
           >
             <Calendar className="w-3.5 h-3.5" />
-            <span>Mês Atual (Outubro: {formatBRL(octoberNetProfit)})</span>
+            <span>Mês Atual ({getMonthName(getCurrentMonthKey())})</span>
           </button>
           <button
             onClick={() => onSelectPeriod('ALL')}
@@ -156,17 +156,13 @@ export function GoalProgress({
           </div>
 
           {/* Explanation badge */}
-          {currentPeriod === '2026-10' ? (
+          {currentPeriod === 'ALL' ? (
             <p className="text-xs text-slate-300 bg-slate-800/60 p-3 rounded-xl border border-slate-700/60 leading-relaxed">
-              💡 <b>Outubro de 2026:</b> Seu faturamento foi de <b>R$ 18.080,00</b> com custo de mercadorias de <b>R$ 15.360,00</b> e despesas de <b>R$ 409,00</b>, gerando lucro líquido de <b>{formatBRL(currentNetProfit)}</b>. Faltam <b>{formatBRL(Math.abs(difference))}</b> para atingir a meta mensal de {formatBRL(target)}.
-            </p>
-          ) : currentPeriod === 'ALL' ? (
-            <p className="text-xs text-slate-300 bg-slate-800/60 p-3 rounded-xl border border-slate-700/60 leading-relaxed">
-              💡 <b>Acumulado Geral (4 Meses):</b> O lucro líquido total somado de Julho a Outubro é de <b>{formatBRL(currentNetProfit)}</b>. Comparado à meta mensal única de {formatBRL(target)}, você ultrapassou com <b>{formatPercent(percentage)}</b>.
+              💡 <b>Acumulado Geral:</b> O lucro líquido total somado é de <b>{formatBRL(currentNetProfit)}</b>. Comparado à meta mensal única de {formatBRL(target)}, você atingiu <b>{formatPercent(percentage)}</b>.
             </p>
           ) : (
             <p className="text-xs text-slate-300 bg-slate-800/60 p-3 rounded-xl border border-slate-700/60 leading-relaxed">
-              💡 <b>{periodLabel}:</b> Lucro líquido de <b>{formatBRL(currentNetProfit)}</b> representando <b>{formatPercent(percentage)}</b> da meta mensal estipulada.
+              💡 <b>{periodLabel}:</b> Lucro líquido de <b>{formatBRL(currentNetProfit)}</b> representando <b>{formatPercent(percentage)}</b> da meta mensal estipulada de {formatBRL(target)}.
             </p>
           )}
         </div>

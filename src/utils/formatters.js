@@ -27,9 +27,40 @@ export const formatDateBR = (dateStr) => {
   return dateStr;
 };
 
+export const getCurrentMonthKey = () => {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, '0');
+  return `${year}-${month}`;
+};
+
+export const getMonthShortName = (monthKey) => {
+  if (!monthKey || monthKey === 'ALL') return 'Geral';
+  const parts = monthKey.split('-');
+  if (parts.length < 2) return monthKey;
+  const months = {
+    '01': 'Janeiro',
+    '02': 'Fevereiro',
+    '03': 'Março',
+    '04': 'Abril',
+    '05': 'Maio',
+    '06': 'Junho',
+    '07': 'Julho',
+    '08': 'Agosto',
+    '09': 'Setembro',
+    '10': 'Outubro',
+    '11': 'Novembro',
+    '12': 'Dezembro'
+  };
+  return months[parts[1]] || parts[1];
+};
+
 export const getMonthName = (monthKey) => {
-  // monthKey: "2026-07"
-  const [year, month] = monthKey.split('-');
+  if (!monthKey || monthKey === 'ALL') return 'Todo o Histórico';
+  const parts = monthKey.split('-');
+  if (parts.length < 2) return monthKey;
+  const year = parts[0];
+  const month = parts[1];
   const months = {
     '01': 'Janeiro',
     '02': 'Fevereiro',
